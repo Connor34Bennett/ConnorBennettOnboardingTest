@@ -1,14 +1,13 @@
 import os
 import pandas as pd
-from flask_cors import CORS # Import CORS
+from flask_cors import CORS
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from dotenv import load_dotenv
-from bson.objectid import ObjectId # Import ObjectId for handling MongoDB _id
+from bson.objectid import ObjectId
 
 df = pd.read_csv('Interview_dataset.csv')
 
-# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
@@ -20,9 +19,8 @@ if not MONGODB_URI:
     raise ValueError("MONGODB_URI environment variable not set.")
 
 client = MongoClient(MONGODB_URI)
-db = client.OnboardingTest # Get the default database from the URI, or specify one: client.your_database_name
+db = client.OnboardingTest
 
-# Define a collection for users
 users_collection = db.Users
 
 # --- API Routes ---
@@ -40,7 +38,6 @@ def get_users():
     try:
         users = []
         for user in users_collection.find():
-            # Convert ObjectId to string for JSON serialization
             user['_id'] = str(user['_id'])
             users.append(user)
         return jsonify({"success": True, "data": users}), 200
@@ -50,10 +47,8 @@ def get_users():
 @app.route('/api/bulkdata', methods=["POST"])
 def buldata():
     try:
-        # Convert DataFrame to list of dictionaries
         records = df.to_dict(orient='records')
 
-        # Insert all records into MongoDB
         result = users_collection.insert_many(records)
 
         return jsonify({
@@ -69,5 +64,4 @@ def buldata():
         }), 500
 
 if __name__ == '__main__':
-    # Run the Flask app. In production, use a WSGI server like Gunicorn.
-    app.run(debug=True, port=5000) # Run on port 5000, or any other free port
+    app.run(debug=True, port=5000)

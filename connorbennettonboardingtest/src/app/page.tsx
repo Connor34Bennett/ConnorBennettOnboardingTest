@@ -1,22 +1,18 @@
-"use client"; // This directive marks the component as a Client Component
+"use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import './globals.css'; // Import the global CSS file
+import './globals.css';
 
-// Constant for ellipsis in pagination
 const DOTS = '...';
 
-// Helper function to generate a range of numbers
 const range = (start: number, end: number) => {
   const length = end - start + 1;
   return Array.from({ length }, (_, i) => start + i);
 };
 
-// Helper function to generate pagination range based on a fixed number of visible buttons
 const getPaginationRange = (currentPage: number, totalPages: number) => {
-  const maxPageButtonsToShow = 4; // Number of page buttons to show in the main sequence (e.g., 1, 2, 3, 4)
+  const maxPageButtonsToShow = 4;
 
-  // Case 1: If total pages are less than or equal to the max visible buttons, show all pages
   if (totalPages <= maxPageButtonsToShow) {
     return range(1, totalPages);
   }
@@ -24,38 +20,32 @@ const getPaginationRange = (currentPage: number, totalPages: number) => {
   let startPage = currentPage - Math.floor(maxPageButtonsToShow / 2);
   let endPage = currentPage + Math.ceil(maxPageButtonsToShow / 2) - 1;
 
-  // Adjust the window if it goes beyond the start (page 1)
   if (startPage < 1) {
     startPage = 1;
     endPage = maxPageButtonsToShow;
   }
 
-  // Adjust the window if it goes beyond the end (last page)
   if (endPage > totalPages) {
     endPage = totalPages;
     startPage = totalPages - maxPageButtonsToShow + 1;
-    // Ensure startPage doesn't go below 1 after adjustment
     if (startPage < 1) startPage = 1;
   }
 
   const pages = [];
 
-  // Add the first page and dots if needed
   if (startPage > 1) {
     pages.push(1);
-    if (startPage > 2) { // Only add dots if there's more than one page skipped
+    if (startPage > 2) {
       pages.push(DOTS);
     }
   }
 
-  // Add the main range of pages within the calculated window
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i);
   }
 
-  // Add the last page and dots if needed
   if (endPage < totalPages) {
-    if (endPage < totalPages - 1) { // Only add dots if there's more than one page skipped
+    if (endPage < totalPages - 1) {
       pages.push(DOTS);
     }
     pages.push(totalPages);
@@ -69,8 +59,7 @@ const App: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  // State to control the visibility of the filters section
-  const [filtersTab, setFiltersTab] = useState<boolean>(true); // true means filters are visible by default
+  const [filtersTab, setFiltersTab] = useState<boolean>(true);
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -80,12 +69,11 @@ const App: React.FC = () => {
   const [subscriptionFilters, setSubscriptionFilters] = useState<string[]>([]);
   const [locationSearch, setLocationSearch] = useState<string>('');
   const [numPortfoliosFilter, setNumPortfoliosFilter] = useState<string>('');
-  const [sizeFilter, setSizeFilter] = useState<number>(50000); // Initial max size is 50,000 KB
+  const [sizeFilter, setSizeFilter] = useState<number>(50000);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
-  // siblingCount is no longer needed as maxPageButtonsToShow handles the visible range
 
   // Fetch data from Flask backend
   useEffect(() => {
@@ -115,7 +103,7 @@ const App: React.FC = () => {
   // Handle size slider change
   const handleSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSizeFilter(Number(event.target.value));
-    setCurrentPage(1); // Reset page on filter change
+    setCurrentPage(1);
   };
 
   // Filtered and Paginated Users
@@ -177,7 +165,6 @@ const App: React.FC = () => {
       });
     }
 
-    // Size Filter - UPDATED LOGIC
     filtered = filtered.filter(user => {
       const sizeInKB = parseFloat(String(user['Size (KB)']));
       return sizeInKB <= sizeFilter;
@@ -193,10 +180,9 @@ const App: React.FC = () => {
     subscriptionFilters,
     locationSearch,
     numPortfoliosFilter,
-    sizeFilter, // Include sizeFilter in the dependency array
+    sizeFilter,
   ]);
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const currentUsers = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -212,10 +198,9 @@ const App: React.FC = () => {
 
   const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page when items per page changes
+    setCurrentPage(1);
   };
 
-  // Handle checkbox changes for filters
   const handleCheckboxChange = (
     filterState: string[],
     setFilterState: React.Dispatch<React.SetStateAction<string[]>>,
@@ -226,21 +211,19 @@ const App: React.FC = () => {
     } else {
       setFilterState([...filterState, value]);
     }
-    setCurrentPage(1); // Reset page on filter change
+    setCurrentPage(1);
   };
 
-  // Handle radio button changes for filters
   const handleRadioChange = (
     setFilterState: React.Dispatch<React.SetStateAction<string>>,
     value: string
   ) => {
     setFilterState(value);
-    setCurrentPage(1); // Reset page on filter change
+    setCurrentPage(1);
   };
 
-  // Helper for status badges
   const getStatusBadge = (status: string) => {
-    let statusClass = 'status-badge-gray'; // Default
+    let statusClass = 'status-badge-gray';
     switch (status) {
       case 'Verified':
         statusClass = 'status-badge-verified';
@@ -261,9 +244,7 @@ const App: React.FC = () => {
     );
   };
 
-  // Get the pagination range to display
   const paginationRange = useMemo(() => {
-    // No need for siblingCount here, as getPaginationRange now determines the visible buttons
     return getPaginationRange(currentPage, totalPages);
   }, [currentPage, totalPages]);
 
@@ -337,7 +318,6 @@ const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="main-content-area">
-        {/* Conditional rendering for Filter Section */}
         {filtersTab && (
           <div className="filter-section-card">
             <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', marginBottom: '1rem' }}>Filter</h2>
@@ -354,8 +334,6 @@ const App: React.FC = () => {
                     placeholder="Type to Search"
                     className="header-search-input"
                     style={{ width: '100%' }}
-                    // This input is for general search, not specific to Portfolio Type filter
-                    // If you need a specific search for portfolio types, you'd manage a separate state
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -470,7 +448,6 @@ const App: React.FC = () => {
                 <label className="filter-label">
                   Size <span style={{ marginLeft: '0.25rem' }}>&#9660;</span>
                 </label>
-                {/* Size Slider Implementation - REPLACED CODE */}
                 <div style={{ marginBottom: '0.5rem', textAlign: 'right' }}>
                   <span style={{ fontSize: '0.75rem', color: '#6b7280', padding: '0.25rem 0.5rem', borderRadius: '0.25rem', backgroundColor: '#e5e7eb' }}>
                     {sizeFilter} KB
