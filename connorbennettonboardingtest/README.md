@@ -1,36 +1,13 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Before attempting to run the application, you need to add the .env file into the
+/connorbennettonboardingtest/connorbennettonboardingtest-backend
+directory. This file was included in the email I sent to submit this. Then do the
+following to run the application:
 
-## Getting Started
+Simply run the following from within the connorbennettonboardingtest directory:
 
-First, run the development server:
+"npm i" in order to install all dependecies, then run
+"npm run dev" to start the application in development mode
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+It is not pixel perfect but this is what I was able to put together in a timely manner and wanted to get you guys a product to review ASAP
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+My implemetation consisted of me adding all of the profiles to MongoDB first, then implementing the pulling of the profiles from MongoDB. I then worked on the frontend, trying to make it look as close to the page on Figma as possible. Then went to work on the pulling and displaying of the profiles from MongoDB. After that, I worked on the filtering features and the smaller changes to the frontend.
